@@ -1,9 +1,15 @@
 package com.compulsory;
 
+import com.exceptions.IdNotFoundException;
+import com.exceptions.UniqueIdentityException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Catalog class: manages a collection of Documents
+ */
 public class Catalog implements Serializable {
     private String name;
     private String path;
@@ -31,20 +37,28 @@ public class Catalog implements Serializable {
         this.path = path;
     }
 
-    public void add(Document doc) {
+    /**
+     * OPTIONAL(5th TASK)
+     */
+    public void addDocument(Document doc) {
+        if (documents.contains(doc))
+            throw new UniqueIdentityException("This document already exists");
         documents.add(doc);
     }
 
     /**
      * find a document using an id
+     * OPTIONAL (5th TASK)
      * @param id of one particular document
      * @return the document with this id
      */
-    public Document findById(String id) {
-        return documents.stream()
-                .filter(document -> document.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public Document findById(String id) throws IdNotFoundException {
+        for (Document document : documents) {
+            if (document.getId().equals(id)) {
+                return document;
+            }
+        }
+        throw new IdNotFoundException(id + " not found");
     }
 
     @Override

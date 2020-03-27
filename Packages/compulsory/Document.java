@@ -1,21 +1,28 @@
 package com.compulsory;
 
+import com.exceptions.PathFormatException;
+
 import java.io.Serializable;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Document class: represents an entry in the Catalog
+ */
 public class Document implements Serializable {
     private String id;
     private String name;
-    private String location;
+    private String path;
 
     private Map<String, Object> tags = new HashMap<>();
 
     public Document(String id, String name, String path) {
         this.id = id;
         this.name = name;
-        this.location = path;
+        this.path = path;
     }
 
     public void addTag(String key, Object value) {
@@ -38,12 +45,22 @@ public class Document implements Serializable {
         this.name = name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getPath() {
+        return path;
     }
 
-    public void setLocation(String path) {
-        this.location = path;
+    /**
+     * OPTIONAL (5th TASK)
+     */
+    public void setPath(String path) {
+        try {
+            Paths.get(path);
+        } catch (InvalidPathException ex) {
+            System.err.println(ex);
+            throw new PathFormatException("Path format is not valid");
+
+        }
+        this.path = path;
     }
 
     public Map<String, Object> getTags() {
@@ -72,7 +89,7 @@ public class Document implements Serializable {
         return "Document{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", path='" + location + '\'' +
+                ", path='" + path + '\'' +
                 ", tags=" + tags +
                 '}';
     }
